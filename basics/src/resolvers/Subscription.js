@@ -1,19 +1,17 @@
 const Subscription = {
-  count: {
+  comment: {
+    // destructuring id from args, db & pubsub from ctx
+    subscribe(parnet, { postId }, { db, pubsub }, info) {
+      // does post exist?
+      const post = db.posts.find(post => post.id === postId && post.published);
+      if (!post) throw new Error('Post not found!');
+
+      return pubsub.asyncIterator(`comment ${postId}`);
+    },
+  },
+  post: {
     subscribe(parent, args, { pubsub }, info) {
-      let count = 0;
-
-      setInterval(() => {
-        count++;
-        // 'channel name' {data to send}
-        pubsub.publish('count', {
-          // data we're sending
-          count,
-        });
-      }, 1000);
-
-      // 'channel name'
-      return pubsub.asyncIterator('count');
+      return pubsub.asyncIterator(`post`);
     },
   },
 };
