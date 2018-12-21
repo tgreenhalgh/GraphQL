@@ -69,16 +69,27 @@ const Mutation = {
 
     return post;
   },
-  deletePost(parent, args, { db }, info) {
+  deletePost(parent, args, { db, pubsub }, info) {
     // get the index of the post
     const postIndex = db.posts.findIndex(post => post.id === args.id);
     if (postIndex === -1) throw new Error('Post not found');
     // the removed post is returned from splice
-    const deletedPosts = db.posts.splice(postIndex, 1);
+    // returns an array [] destructures it
+    const [post] = db.posts.splice(postIndex, 1);
     // get rid of the post's comments
     db.comments = db.comments.filter(comment => comment.post !== args.id);
 
-    return deletedPosts[0];
+    // only alert subscribers if post was published
+    if (post.published) {
+      pubsub.publish(`post`, {
+        post: {
+          mutation: 'DELETED',
+          data: post,
+        },
+      });
+    }
+
+    return post;
   },
   updatePost(parent, args, { db }, info) {
     const { id, data } = args;
