@@ -58,7 +58,14 @@ const Mutation = {
     };
 
     db.posts.push(post);
-    if (post.published) pubsub.publish(`post`, { post });
+    if (post.published) {
+      pubsub.publish(`post`, {
+        post: {
+          mutation: 'CREATED',
+          data: post,
+        },
+      });
+    }
 
     return post;
   },
