@@ -168,21 +168,18 @@ const Mutation = {
 
     if (commentIndex === -1) throw new Error('Comment not found');
 
-    // grab the comment and postID
-    const comment = db.comments[commentIndex];
-    const { postID } = comment;
+    // delete the comment
+    const [deletedComment] = db.comments.splice(commentIndex, 1);
+    const { postID } = deletedComment;
 
     pubsub.publish(`comment ${postID}`, {
       comment: {
         mutation: 'DELETED',
-        data: comment,
+        data: deletedComment,
       },
     });
 
-    // delete the comment
-    const deletedComment = db.comments.splice(commentIndex, 1);
-
-    return deletedComment[0];
+    return deletedComment;
   },
   updateComment(parent, args, { db, pubsub }, info) {
     const { id, data } = args;
