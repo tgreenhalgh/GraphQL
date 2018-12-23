@@ -23,7 +23,7 @@ const Mutation = {
     db.posts = db.posts.filter(post => {
       const match = post.author === args.id;
       if (match) {
-        db.comments = db.comments.filter(comment => comment.post !== post.id);
+        db.comments = db.comments.filter(comment => comment.postID !== post.id);
       }
 
       return !match;
@@ -74,10 +74,10 @@ const Mutation = {
     const postIndex = db.posts.findIndex(post => post.id === args.id);
     if (postIndex === -1) throw new Error('Post not found');
     // the removed post is returned from splice
-    // returns an array [] destructures it
+    // returns an array, [] destructures it
     const [post] = db.posts.splice(postIndex, 1);
     // get rid of the post's comments
-    db.comments = db.comments.filter(comment => comment.post !== args.id);
+    db.comments = db.comments.filter(comment => comment.postID !== args.id);
 
     // only alert subscribers if post was published
     if (post.published) {
@@ -135,10 +135,10 @@ const Mutation = {
     return post;
   },
   createComment(parent, args, { db, pubsub }, info) {
-    const { author, post } = args.data;
+    const { author, postID } = args.data;
 
     const postExists = db.posts.some(
-      aPost => aPost.id === post && aPost.published,
+      post => post.id === postID && post.published,
     );
     if (!postExists) throw new Error('Post not found');
 
@@ -151,7 +151,13 @@ const Mutation = {
     };
 
     db.comments.push(comment);
-    pubsub.publish(`comment ${args.data.post}`, { comment });
+    console.log('COMMENT ID', postID);
+    pubsub.publish(`comment ${postID}`, {
+      comment: {
+        mutation: 'CREATED',
+        data: comment,
+      },
+    });
 
     return comment;
   },

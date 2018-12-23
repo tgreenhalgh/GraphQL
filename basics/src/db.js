@@ -48,25 +48,25 @@ const comments = [
   {
     id: '7',
     text: 'first!1!!!11!',
-    post: '5',
+    postID: '5',
     author: '1',
   },
   {
     id: '8',
     text: 'how mature!',
-    post: '5',
+    postID: '5',
     author: '2',
   },
   {
     id: '9',
     text: "y'all are crazy!",
-    post: '6',
+    postID: '6',
     author: '3',
   },
   {
     id: '10 ',
     text: 'the best for last',
-    post: '4',
+    postID: '4',
     author: '1',
   },
 ];

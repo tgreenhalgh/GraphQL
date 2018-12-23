@@ -1,12 +1,12 @@
 const Subscription = {
   comment: {
     // destructuring id from args, db & pubsub from ctx
-    subscribe(parnet, { postId }, { db, pubsub }, info) {
+    subscribe(parnet, { postID }, { db, pubsub }, info) {
       // does post exist?
-      const post = db.posts.find(post => post.id === postId && post.published);
+      const post = db.posts.find(post => post.id === postID && post.published);
       if (!post) throw new Error('Post not found!');
 
-      return pubsub.asyncIterator(`comment ${postId}`);
+      return pubsub.asyncIterator(`comment ${postID}`);
     },
   },
   post: {
