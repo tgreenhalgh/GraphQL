@@ -168,7 +168,7 @@ const Mutation = {
 
     if (commentIndex === -1) throw new Error('Comment not found');
 
-    // grab the postID
+    // grab the comment and postID
     const comment = db.comments[commentIndex];
     const { postID } = comment;
 
