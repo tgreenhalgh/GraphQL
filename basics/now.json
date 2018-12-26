@@ -1,0 +1,14 @@
+{
+  "name": "prisma-now",
+  "type": "docker",
+  "features": {
+    "cloud": "v1"
+  },
+  "build": {
+    "env": {
+      "SQL_HOST": "35.230.34.75",
+      "SQL_PASSWORD": "@sql-password",
+      "PRISMA_MANAGEMENT_API_SECRET": "@prisma-management-api-secret"
+    }
+  },
+  
